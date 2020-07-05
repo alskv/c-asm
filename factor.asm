@@ -9,8 +9,8 @@ factorization:
     push esi
     push edi
 
-    mov eax, [esp+20] ;number
-    mov edi, [esp+24] ;callback 
+    mov eax, [ebp+8] ;number
+    mov edi, [ebp+12] ;callback 
     mov ebx, 2 ;factor
 
 _factor:

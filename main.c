@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <inttypes.h>
+#include <ctype.h>
 
 typedef int32_t (*callback)(int32_t, int32_t);
 extern int32_t factorization(int32_t number, callback print_factor);
@@ -16,26 +17,23 @@ int main(int argc, char* argv[])
     if (argc != 2)
     {
         fprintf(stderr, "Error: too much/few arguments.\n\
-                        Input example: ./<PROGRAM NAME> <YOUR NUMBER>\n");
+                        Input example: %s <YOUR NUMBER>\n", argv[0]);
         return 1;
     }
 
     char *number_str = argv[1];
-    // check whether the input is valid for negative numbers
+
+    // check number sign
+    int sign = 0;
     if (number_str[0] == '-')
-    {
-        if (search_wrong(number_str, 1) != 0)
+        sign++;
+
+    // check whether the input is valid 
+    if (search_wrong(number_str, sign))
         {
             fprintf(stderr, "Error: the enter string is not a number\n");
             return 1;
         }
-    }
-    // check whether the input is valid for positive numbers
-    else if (search_wrong(number_str, 0))
-    {
-        fprintf(stderr, "Error: the enter string is not a number\n");
-        return 1;
-    }
     
     // number from string, checking overflow
     int32_t number = (int32_t)strtol(number_str, NULL, 10);
@@ -55,7 +53,7 @@ int search_wrong(char* number_str, int sign_number)
     int i = sign_number;
     while (number_str[i] != '\0')
     {
-        if (!((number_str[i] >= '0') && (number_str[i] <= '9')))
+        if (!(isdigit(number_str[i])))
         {
             return 1;
         }
@@ -65,7 +63,7 @@ int search_wrong(char* number_str, int sign_number)
 
 }
 
-void factorization_call(int32_t number, callback print_factor)
+void factorization_call(int32_t number, callback cb)
 {
     // handling special cases
     if ((number == 0) || (number == 1) || (number == -1))
@@ -80,7 +78,7 @@ void factorization_call(int32_t number, callback print_factor)
         number = abs(number);
     }
 
-    factorization(number, print_factor);
+    factorization(number, cb);
 
     return;
 }
