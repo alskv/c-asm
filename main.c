@@ -7,7 +7,7 @@
 typedef int32_t (*callback)(int32_t, int32_t);
 extern int32_t factorization(int32_t number, callback print_factor);
 
-int search_wrong(char* num_str, int sign_num);
+int search_wrong(char* num_str);
 void factorization_call(int32_t number, callback print_factor);
 int32_t print_factor(int32_t factor, int32_t new_number);
 
@@ -23,13 +23,8 @@ int main(int argc, char* argv[])
 
     char *number_str = argv[1];
 
-    // check number sign
-    int sign = 0;
-    if (number_str[0] == '-')
-        sign++;
-
     // check whether the input is valid 
-    if (search_wrong(number_str, sign))
+    if (search_wrong(number_str))
         {
             fprintf(stderr, "Error: the enter string is not a number\n");
             return 1;
@@ -48,15 +43,16 @@ int main(int argc, char* argv[])
 }
 
 // sign_num = 1 if number is negative and = 0 if number is non-negative
-int search_wrong(char* number_str, int sign_number)
+int search_wrong(char* number_str)
 {
-    int i = sign_number;
+    int i = 0;
+    if (number_str[i] == '-')
+        i++;
+    
     while (number_str[i] != '\0')
     {
         if (!(isdigit(number_str[i])))
-        {
             return 1;
-        }
         i++;
     }    
     return 0;
